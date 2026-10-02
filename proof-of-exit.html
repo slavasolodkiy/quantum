@@ -1,39 +1,560 @@
 <!doctype html>
-<html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>Proof of Exit</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROOF OF EXIT — Moth Atlas · Quantum Graph Engine | by Slava Solodkiy.cv</title>
 <style>
-body{font-family:system-ui,sans-serif;margin:0;background:#0f1115;color:#f6f4ef}main{max-width:1050px;margin:auto;padding:48px 24px}h1{font-size:clamp(3rem,8vw,7rem);margin:.1em 0}.tag{font-size:1.25rem;color:#b8d7ff}.numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:32px 0}.n,.world{background:#181c23;border:1px solid #303640;border-radius:14px;padding:18px}.n b{display:block;font-size:2rem}.worlds{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}pre{font-size:1.05rem;line-height:1.1}.exit{border-color:#4fa46c}.locked{border-color:#bd6666}footer{margin-top:36px;color:#aaa}@media(max-width:650px){.numbers{grid-template-columns:1fr}}
-</style></head><body><main>
-<p class='tag'>Atlas samples. Logic explains.</p><h1>Proof of Exit</h1>
-<p>A 4×4 maze is represented by a 16-bit world. A corridor opens when adjacent rooms agree. Classical reachability checking determines whether an exit exists and emits a certificate for every sampled world.</p>
-<div class='numbers'>
-<div class='n'><span>Independent-door intuition</span><b>75%</b></div>
-<div class='n'><span>Balanced target prediction</span><b>50%</b></div>
-<div class='n'><span>Observed Atlas emulation</span><b>100.0%</b></div>
+:root{
+  --bg:#08090c; --panel:#0e1014; --line:#23262e; --line2:#31353f;
+  --ink:#f2f1ea; --dim:#8a8f9a; --acid:#c8ff00; --mag:#ff2d9a; --cy:#35f2ff;
+  --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--mono);overflow-x:hidden}
+::selection{background:var(--acid);color:#000}
+
+/* ---------- atmosphere ---------- */
+.scanlines{position:fixed;inset:0;pointer-events:none;z-index:60;mix-blend-mode:overlay;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 1px,transparent 1px 3px)}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:59;
+  background:radial-gradient(120% 90% at 50% 0%,transparent 55%,rgba(0,0,0,.55) 100%)}
+.bggrid{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.16;
+  background:
+   linear-gradient(rgba(200,255,0,.05) 1px,transparent 1px),
+   linear-gradient(90deg,rgba(200,255,0,.05) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(80% 60% at 50% 20%,#000 30%,transparent 100%)}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:10px 20px;background:rgba(8,9,12,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.22em}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--acid);
+  box-shadow:0 0 10px var(--acid);animation:led 1.6s steps(2) infinite}
+@keyframes led{50%{opacity:.25}}
+.brand b{color:var(--acid)}
+.jobchip{font-size:10px;letter-spacing:.14em;color:var(--dim);border:1px solid var(--line2);
+  padding:5px 10px;border-radius:3px;display:flex;gap:8px;align-items:center}
+.jobchip .ok{color:var(--acid);animation:led 2.2s steps(2) infinite}
+
+/* ---------- ticker ---------- */
+.ticker{overflow:hidden;border-bottom:1px solid var(--line);background:var(--panel);position:relative;z-index:2}
+.ticker div{display:flex;gap:48px;white-space:nowrap;padding:7px 0;font-size:11px;letter-spacing:.18em;
+  color:var(--dim);animation:tick 28s linear infinite;width:max-content}
+.ticker span i{color:var(--acid);font-style:normal}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+main{position:relative;z-index:2;max-width:1180px;margin:auto;padding:0 22px 80px}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:center;padding:64px 0 44px}
+.kicker{font-size:11px;letter-spacing:.34em;color:var(--cy);margin-bottom:18px}
+h1.glitch{font-size:clamp(3rem,8.5vw,7.2rem);line-height:.92;font-weight:800;letter-spacing:-.02em;position:relative}
+h1.glitch span{display:block}
+h1.glitch .l2{color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+.glitchable{position:relative}
+.glitchable::before,.glitchable::after{content:attr(data-text);position:absolute;inset:0;opacity:0;pointer-events:none}
+body.glitching .glitchable::before{opacity:.85;color:var(--mag);transform:translate(-4px,2px);
+  clip-path:inset(12% 0 55% 0);animation:gl .28s steps(3) both}
+body.glitching .glitchable::after{opacity:.85;color:var(--cy);transform:translate(4px,-2px);
+  clip-path:inset(60% 0 8% 0);animation:gl .28s steps(3) both}
+@keyframes gl{0%{clip-path:inset(10% 0 60% 0)}50%{clip-path:inset(45% 0 20% 0)}100%{clip-path:inset(70% 0 5% 0)}}
+.sub{margin-top:20px;color:var(--dim);font-size:14px;max-width:46ch;line-height:1.7}
+.sub b{color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.chip{font-size:10px;letter-spacing:.16em;border:1px solid var(--line2);border-radius:3px;
+  padding:6px 10px;color:var(--dim);transition:.2s}
+.chip:hover{border-color:var(--acid);color:var(--acid);transform:translateY(-2px)}
+.chip i{font-style:normal;color:var(--acid)}
+
+/* ---------- maze device ---------- */
+.device{position:relative;background:linear-gradient(160deg,#11141a,#0a0c10);
+  border:1px solid var(--line2);border-radius:18px;padding:18px 18px 10px;
+  box-shadow:0 30px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06)}
+.device::before{content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 4px)}
+.devhead{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;
+  letter-spacing:.24em;color:var(--dim);padding:0 4px 10px}
+.devhead .rec{color:var(--mag)} .devhead .rec::before{content:"●";margin-right:6px;animation:led 1.2s steps(2) infinite}
+.maze{width:100%;height:auto;display:block}
+.cell{fill:rgba(255,255,255,.015);stroke:var(--line);stroke-width:1}
+.nshadow{fill:rgba(0,0,0,.5)}
+.edge{stroke:#3a3f4b;stroke-width:2.4;stroke-linecap:round}
+.edge.pathedge{stroke:#1f6f4a;stroke-width:2.4}
+.edge.bridge{stroke:var(--acid);stroke-width:3;filter:drop-shadow(0 0 6px rgba(200,255,0,.7));
+  animation:bridgepulse 2.4s ease-in-out infinite;stroke-dasharray:7 5}
+@keyframes bridgepulse{50%{opacity:.45;filter:drop-shadow(0 0 2px rgba(200,255,0,.3))}}
+.walk{fill:none;stroke:var(--cy);stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 0 8px rgba(53,242,255,.8));
+  stroke-dasharray:620;stroke-dashoffset:620;animation:walk 5s ease-in-out infinite}
+@keyframes walk{0%{stroke-dashoffset:620;opacity:0}8%{opacity:1}55%{stroke-dashoffset:0;opacity:1}
+  85%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+.node{fill:#0a0c10;stroke:#c9cdd6;stroke-width:1.6}
+.node.start{stroke:var(--acid);filter:drop-shadow(0 0 6px rgba(200,255,0,.8))}
+.node.exit{stroke:var(--cy);filter:drop-shadow(0 0 6px rgba(53,242,255,.8))}
+.nlabel{fill:#565c68;font-size:8px;text-anchor:middle;font-family:var(--mono)}
+.taglabel{font-size:9px;letter-spacing:.28em;text-anchor:middle;font-family:var(--mono)}
+.tstart{fill:var(--acid)} .texit{fill:var(--cy)}
+.devfoot{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.2em;
+  color:var(--dim);padding:10px 4px 6px}
+.devfoot .b{color:var(--acid)} .devfoot .c{color:var(--cy)}
+
+/* ---------- readouts ---------- */
+.readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 70px}
+.readout{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 20px;
+  position:relative;overflow:hidden;transition:transform .25s,border-color .25s;cursor:default}
+.readout:hover{transform:translateY(-6px);border-color:var(--rc,var(--acid))}
+.readout::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(70% 55% at 50% 0%,color-mix(in srgb,var(--rc,var(--acid)) 12%,transparent),transparent 70%)}
+.readout .lab{font-size:10px;letter-spacing:.24em;color:var(--dim);margin-bottom:10px}
+.readout .num{font-size:clamp(2.6rem,5vw,4rem);font-weight:800;color:var(--rc,var(--acid));
+  text-shadow:0 0 24px color-mix(in srgb,var(--rc,var(--acid)) 45%,transparent);line-height:1}
+.readout .cap{font-size:11px;color:var(--dim);margin-top:10px;line-height:1.6}
+.r1{--rc:var(--cy)} .r2{--rc:var(--acid)} .r3{--rc:var(--mag)}
+
+/* ---------- sections ---------- */
+section{margin:70px 0}
+.sechead{display:flex;align-items:baseline;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.sechead .idx{font-size:11px;letter-spacing:.3em;color:var(--acid);border:1px solid var(--line2);
+  padding:5px 10px;border-radius:3px}
+.sechead h2{font-size:clamp(1.5rem,3.4vw,2.4rem);letter-spacing:-.01em}
+.sechead .sub2{font-size:11px;color:var(--dim);letter-spacing:.2em;margin-left:auto}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.on{opacity:1;transform:none}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;position:relative;overflow:hidden}
+.card h3{font-size:12px;letter-spacing:.26em;margin-bottom:14px;color:var(--cy)}
+.card p{font-size:13px;line-height:1.75;color:#c6c9d1}
+.card p b{color:var(--ink)} .card p .a{color:var(--acid)} .card p .m{color:var(--mag)}
+.formula{margin-top:18px;border:1px dashed var(--line2);border-radius:10px;padding:16px 18px;
+  font-size:15px;letter-spacing:.06em;color:var(--acid);background:rgba(200,255,0,.03)}
+.formula small{display:block;margin-top:8px;font-size:10px;letter-spacing:.2em;color:var(--dim)}
+.bars{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.bar{height:26px;border:1px solid var(--line2);border-radius:4px;position:relative;overflow:hidden;font-size:10px}
+.bar i{position:absolute;inset:0;width:0;transition:width 1.2s cubic-bezier(.2,.9,.2,1)}
+.bar span{position:absolute;inset:0;display:flex;align-items:center;padding-left:10px;letter-spacing:.14em;color:var(--ink);mix-blend-mode:difference}
+.b75 i{background:var(--cy)} .b50 i{background:var(--acid)} .b100 i{background:var(--mag)}
+
+/* ---------- terminal ---------- */
+.term{background:#05070a;border:1px solid var(--line2);border-radius:12px;overflow:hidden}
+.termbar{display:flex;gap:7px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:.2em;color:var(--dim)}
+.termbar i{width:9px;height:9px;border-radius:50%;background:var(--line2)}
+.termbar i:first-child{background:var(--mag)} .termbar i:nth-child(2){background:var(--acid)} .termbar i:nth-child(3){background:var(--cy)}
+.term pre{padding:20px;font-size:12px;line-height:1.9;color:#b9f0c4;white-space:pre-wrap;word-break:break-all}
+.term pre .k{color:var(--cy)} .term pre .a{color:var(--acid)} .term pre .m{color:var(--mag)}
+.cursor{display:inline-block;width:8px;height:14px;background:var(--acid);vertical-align:-2px;animation:led 1s steps(2) infinite}
+
+/* ---------- mismatch ---------- */
+.zz{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch}
+.zz .big{font-size:clamp(1.9rem,4.5vw,3.4rem);font-weight:800;text-align:center;padding:30px 16px;border-radius:14px}
+.zz .req{border:1px solid var(--cy);color:var(--cy);background:rgba(53,242,255,.05);
+  text-shadow:0 0 20px rgba(53,242,255,.5)}
+.zz .obs{border:1px solid var(--mag);color:var(--mag);background:rgba(255,45,154,.05);
+  text-shadow:0 0 20px rgba(255,45,154,.5);animation:obsflick 4s infinite}
+@keyframes obsflick{0%,92%,96%,100%{opacity:1}94%{opacity:.4}}
+.zz .vs{align-self:center;font-size:11px;letter-spacing:.3em;color:var(--dim);writing-mode:vertical-rl}
+.zz .big small{display:block;font-size:10px;letter-spacing:.26em;margin-top:12px;color:var(--dim);font-weight:400;text-shadow:none}
+
+/* ---------- world certificate ---------- */
+.worldwrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.worldcard{border:1px solid #4fa46c;border-radius:14px;background:var(--panel);padding:24px;position:relative;overflow:hidden}
+.worldcard::after{content:"CERTIFIED · EXIT";position:absolute;top:14px;right:-38px;transform:rotate(35deg);
+  background:var(--acid);color:#000;font-size:9px;letter-spacing:.2em;padding:4px 40px}
+.worldcard .p1{font-size:11px;letter-spacing:.2em;color:#7fd79a;margin-bottom:14px}
+.worldcard pre{font-size:clamp(11px,1.6vw,14px);line-height:1.25;color:var(--ink)}
+.pathline{margin-top:16px;font-size:12px;color:var(--dim)}
+.pathline b{color:var(--cy);letter-spacing:.1em}
+
+/* ---------- quantum honesty panel ---------- */
+.honest{border:1px solid var(--line2);border-left:3px solid var(--acid);border-radius:0 14px 14px 0;
+  background:var(--panel);padding:26px}
+.honest p{font-size:13px;line-height:1.8;color:#c6c9d1;margin-bottom:12px}
+.honest p:last-child{margin-bottom:0}
+.honest .a{color:var(--acid)} .honest .m{color:var(--mag)} .honest b{color:var(--ink)}
+
+/* ---------- evidence ---------- */
+details{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;background:var(--panel);overflow:hidden}
+summary{cursor:pointer;padding:16px 20px;font-size:11px;letter-spacing:.24em;color:var(--dim);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;transition:.2s}
+summary::after{content:"+";font-size:16px;color:var(--acid);transition:.2s}
+details[open] summary::after{transform:rotate(45deg)}
+summary:hover{color:var(--acid);border-color:var(--acid)}
+details pre{max-height:420px;overflow:auto;padding:0 20px 18px;font-size:11px;line-height:1.55;color:#9aa3ad}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:80px;padding:44px 22px 60px;position:relative;z-index:2}
+.footin{max-width:1180px;margin:auto;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:30px}
+footer h4{font-size:10px;letter-spacing:.3em;color:var(--dim);margin-bottom:16px}
+footer p, footer a{font-size:12px;line-height:2;color:#b9bdc7;text-decoration:none}
+footer a{display:block;transition:.2s}
+footer a:hover{color:var(--acid);transform:translateX(6px)}
+footer a i{font-style:normal;color:var(--line2);margin-right:8px}
+.footname{font-size:20px;font-weight:800;margin-bottom:8px}
+.footname span{color:var(--acid)}
+.copy{max-width:1180px;margin:40px auto 0;font-size:10px;letter-spacing:.2em;color:#565c68;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+@media(max-width:900px){
+  .hero,.cols,.worldwrap,.zz{grid-template-columns:1fr}
+  .zz .vs{writing-mode:horizontal-tb}
+  .readouts{grid-template-columns:1fr}
+  .footin{grid-template-columns:1fr}
+}
+
+.jobchip a{color:inherit;text-decoration:none}
+@media(max-width:760px){
+  header{flex-wrap:wrap;align-items:flex-start;gap:8px}
+  .brand{font-size:9px;letter-spacing:.1em;overflow-wrap:anywhere}
+  .jobchip{width:100%;justify-content:flex-start;flex-wrap:wrap}
+}
+
+/* ---------- TE hardware readouts ---------- */
+.readouts{gap:22px}
+.rdevice{position:relative}
+.plate{position:relative;border-radius:16px;padding:16px 14px 14px;
+  background:linear-gradient(165deg,#1b1e24,#101318 60%,#14171c);
+  border:1px solid #2c313a;
+  box-shadow:0 18px 40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07), inset 0 -2px 6px rgba(0,0,0,.5)}
+.plate::before{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(115deg,rgba(255,255,255,.022) 0 1px,transparent 1px 3px)}
+.screw{position:absolute;width:10px;height:10px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#4a4f58,#191c21 70%);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.8)}
+.screw::after{content:"";position:absolute;left:1px;right:1px;top:4px;height:1.5px;background:#0a0c0f;transform:rotate(38deg)}
+.screw.tl{top:7px;left:7px}.screw.tr{top:7px;right:7px}.screw.bl{bottom:7px;left:7px}.screw.br{bottom:7px;right:7px}
+.dhead,.dfoot{display:flex;align-items:center;justify-content:space-between;padding:2px 6px 12px}
+.dfoot{padding:12px 6px 2px}
+.knob{width:34px;height:34px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#3a3f47,#14171c 75%);
+  box-shadow:0 3px 6px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.15);position:relative}
+.knob::after{content:"";position:absolute;left:50%;top:3px;width:2.5px;height:11px;background:#9aa1ab;transform:translateX(-50%);border-radius:2px}
+.knob.sm{width:26px;height:26px}.knob.sm::after{height:8px}
+.toggle{width:40px;height:20px;border-radius:12px;background:#0b0d11;border:1px solid #262b33;position:relative;box-shadow:inset 0 2px 4px rgba(0,0,0,.7)}
+.toggle::after{content:"";position:absolute;top:2px;left:3px;width:14px;height:14px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#4a4f58,#1c2026 75%)}
+.led{width:10px;height:10px;border-radius:50%;background:#23262e;border:1px solid #33383f}
+.led.on{background:var(--rc,var(--acid));border-color:transparent;box-shadow:0 0 9px var(--rc,var(--acid));animation:led 2.6s steps(2) infinite}
+.jack{width:14px;height:26px;border-radius:7px;background:#0b0d11;border:1px solid #262b33;box-shadow:inset 0 2px 5px rgba(0,0,0,.8)}
+.screen{background:#05070a;border:1px solid #20242b;border-radius:10px;padding:18px 16px;
+  box-shadow:inset 0 2px 10px rgba(0,0,0,.85), inset 0 0 40px rgba(0,0,0,.6)}
+.screen .lab{font-size:9.5px;letter-spacing:.22em;color:var(--dim);margin-bottom:10px}
+.screen .num{font-size:clamp(2.5rem,4.6vw,3.6rem);font-weight:800;color:var(--rc,var(--acid));line-height:1;
+  text-shadow:0 0 18px color-mix(in srgb,var(--rc,var(--acid)) 55%,transparent)}
+.screen .num.seg{font-family:var(--mono);letter-spacing:.04em;
+  text-shadow:0 0 18px color-mix(in srgb,var(--rc,var(--acid)) 55%,transparent),
+   2px 0 0 color-mix(in srgb,var(--rc,var(--acid)) 30%,transparent),
+   -2px 0 0 color-mix(in srgb,var(--rc,var(--acid)) 30%,transparent)}
+.screen .cap{font-size:10.5px;color:var(--dim);margin-top:12px;line-height:1.6}
+
+/* ---------- probability diagnostic ---------- */
+.diag{width:100%;border-collapse:collapse;font-size:11px;letter-spacing:.08em}
+.diag th{font-size:9px;letter-spacing:.22em;color:var(--dim);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line2)}
+.diag td{padding:10px;border-bottom:1px solid var(--line);color:#c6c9d1}
+.diag td:first-child{color:var(--dim);font-size:9px;letter-spacing:.22em;white-space:nowrap}
+.diag td.c{color:var(--cy)} .diag td.a{color:var(--acid)} .diag td.m{color:var(--mag)}
+.diag tr:hover td{background:rgba(255,255,255,.025)}
+</style>
+</head>
+<body>
+<div class="bggrid"></div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+
+<header>
+  <div class="brand"><span class="dot"></span>MOTH&nbsp;ATLAS&nbsp;<b>/</b>&nbsp;QUANTUM&nbsp;GRAPH&nbsp;ENGINE | JOB a03509aa·4b7b·4a0a</div>
+  <div class="jobchip"><span class="ok">● <a href="https://youtu.be/loM8b_kDTyc" target="_blank" rel="noopener">video</a></span> | <a href="https://github.com/slavasolodkiy/quantum" target="_blank" rel="noopener">github</a> | <a href="https://x.com/NansenID/status/2105722251702063540" target="_blank" rel="noopener">X</a></div>
+</header>
+
+<div class="ticker"><div>
+  <span>GRAPH-V1 <i>//</i> EMU/AER</span><span>4096 SHOTS <i>//</i> 4096 RETURNED</span>
+  <span>DOMINANT WORLD <i>0000000000000000</i></span><span>EDGE AGREEMENT <i>1.00</i></span>
+  <span>EXHAUSTIVE PROOF <i>2^16 WORLDS</i></span><span>REQUESTED ZZ=0 <i>//</i> OBSERVED ZZ=1</span>
+  <span>PATH CERT <i>0-1-2-3-7-11-15</i></span><span>NO QPU <i>//</i> NO ADVANTAGE CLAIMED</span>
+  <span>GRAPH-V1 <i>//</i> EMU/AER</span><span>4096 SHOTS <i>//</i> 4096 RETURNED</span>
+  <span>DOMINANT WORLD <i>0000000000000000</i></span><span>EDGE AGREEMENT <i>1.00</i></span>
+  <span>EXHAUSTIVE PROOF <i>2^16 WORLDS</i></span><span>REQUESTED ZZ=0 <i>//</i> OBSERVED ZZ=1</span>
+  <span>PATH CERT <i>0-1-2-3-7-11-15</i></span><span>NO QPU <i>//</i> NO ADVANTAGE CLAIMED</span>
+</div></div>
+
+<main>
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="kicker">SPECIMEN REPORT · 001 · DEPENDENCE / PROBABILITY / EVIDENCE</div>
+      <h1 class="glitch">
+        <span class="glitchable" data-text="PROOF">PROOF</span>
+        <span class="l2 glitchable" data-text="OF EXIT">OF EXIT</span>
+      </h1>
+      <p class="sub">When a maze shows <b>two doors</b>, do they really represent
+      <b>two independent chances</b>? A 4×4 maze, one real completed Atlas graph-v1 job,
+      one exhaustive classical proof — and an honest mismatch between what was requested
+      and what the engine returned.</p>
+      <div class="chips">
+        <span class="chip">16 <i>QUBITS</i></span>
+        <span class="chip">17 <i>EDGES</i></span>
+        <span class="chip">4096 <i>SHOTS</i></span>
+        <span class="chip">EMU <i>/</i> AER</span>
+        <span class="chip">65 536 <i>WORLDS CHECKED</i></span>
+        <span class="chip">JOB <i>a03509aa…4514f</i></span>
+      </div>
+    </div>
+    <figure class="device">
+      <div class="devhead"><span>QGE-16 · WORLD VIEWER</span><span class="rec">JOB REPLAY</span></div>
+<svg class="maze" viewBox="-205 -40 410 291" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="isometric 4x4 maze">
+<path d="M0.0,0.0 L45.0,26.0 L0.0,52.0 L-45.0,26.0 Z" class="cell"/>
+<path d="M-45.0,26.0 L0.0,52.0 L-45.0,78.0 L-90.1,52.0 Z" class="cell"/>
+<path d="M-90.1,52.0 L-45.0,78.0 L-90.1,104.0 L-135.1,78.0 Z" class="cell"/>
+<path d="M45.0,26.0 L90.1,52.0 L45.0,78.0 L0.0,52.0 Z" class="cell"/>
+<path d="M0.0,52.0 L45.0,78.0 L0.0,104.0 L-45.0,78.0 Z" class="cell"/>
+<path d="M-45.0,78.0 L0.0,104.0 L-45.0,130.0 L-90.1,104.0 Z" class="cell"/>
+<path d="M90.1,52.0 L135.1,78.0 L90.1,104.0 L45.0,78.0 Z" class="cell"/>
+<path d="M45.0,78.0 L90.1,104.0 L45.0,130.0 L0.0,104.0 Z" class="cell"/>
+<path d="M0.0,104.0 L45.0,130.0 L0.0,156.0 L-45.0,130.0 Z" class="cell"/>
+<circle cx="0.0" cy="14.0" r="9" class="nshadow"/>
+<circle cx="45.0" cy="40.0" r="9" class="nshadow"/>
+<circle cx="90.1" cy="66.0" r="9" class="nshadow"/>
+<circle cx="135.1" cy="92.0" r="9" class="nshadow"/>
+<circle cx="-45.0" cy="40.0" r="9" class="nshadow"/>
+<circle cx="0.0" cy="66.0" r="9" class="nshadow"/>
+<circle cx="45.0" cy="92.0" r="9" class="nshadow"/>
+<circle cx="90.1" cy="118.0" r="9" class="nshadow"/>
+<circle cx="-90.1" cy="66.0" r="9" class="nshadow"/>
+<circle cx="-45.0" cy="92.0" r="9" class="nshadow"/>
+<circle cx="0.0" cy="118.0" r="9" class="nshadow"/>
+<circle cx="45.0" cy="144.0" r="9" class="nshadow"/>
+<circle cx="-135.1" cy="92.0" r="9" class="nshadow"/>
+<circle cx="-90.1" cy="118.0" r="9" class="nshadow"/>
+<circle cx="-45.0" cy="144.0" r="9" class="nshadow"/>
+<circle cx="0.0" cy="170.0" r="9" class="nshadow"/>
+<line x1="0.0" y1="0.0" x2="45.0" y2="26.0" class="edge pathedge"/>
+<line x1="45.0" y1="26.0" x2="90.1" y2="52.0" class="edge pathedge"/>
+<line x1="90.1" y1="52.0" x2="135.1" y2="78.0" class="edge pathedge"/>
+<line x1="135.1" y1="78.0" x2="90.1" y2="104.0" class="edge bridge"/>
+<line x1="90.1" y1="104.0" x2="45.0" y2="130.0" class="edge pathedge"/>
+<line x1="45.0" y1="130.0" x2="0.0" y2="156.0" class="edge pathedge"/>
+<line x1="0.0" y1="0.0" x2="-45.0" y2="26.0" class="edge"/>
+<line x1="-45.0" y1="26.0" x2="-90.1" y2="52.0" class="edge"/>
+<line x1="-90.1" y1="52.0" x2="-45.0" y2="78.0" class="edge"/>
+<line x1="-45.0" y1="78.0" x2="-90.1" y2="104.0" class="edge"/>
+<line x1="-90.1" y1="104.0" x2="-45.0" y2="130.0" class="edge"/>
+<line x1="0.0" y1="104.0" x2="-45.0" y2="130.0" class="edge bridge"/>
+<line x1="0.0" y1="104.0" x2="45.0" y2="130.0" class="edge"/>
+<line x1="90.1" y1="52.0" x2="45.0" y2="78.0" class="edge"/>
+<line x1="0.0" y1="52.0" x2="45.0" y2="78.0" class="edge"/>
+<line x1="0.0" y1="52.0" x2="-45.0" y2="78.0" class="edge"/>
+<line x1="-135.1" y1="78.0" x2="-90.1" y2="104.0" class="edge"/>
+<path d="M0.0,0.0 L45.0,26.0 L90.1,52.0 L135.1,78.0 L90.1,104.0 L45.0,130.0 L0.0,156.0" class="walk"/>
+<circle cx="0.0" cy="0.0" r="7.5" class="node start"/>
+<text x="0.0" y="-15.0" class="nlabel">0</text>
+<text x="0.0" y="-28.0" class="taglabel tstart">START</text>
+<circle cx="45.0" cy="26.0" r="7.5" class="node"/>
+<text x="45.0" y="11.0" class="nlabel">1</text>
+<circle cx="90.1" cy="52.0" r="7.5" class="node"/>
+<text x="90.1" y="37.0" class="nlabel">2</text>
+<circle cx="135.1" cy="78.0" r="7.5" class="node"/>
+<text x="135.1" y="63.0" class="nlabel">3</text>
+<circle cx="-45.0" cy="26.0" r="7.5" class="node"/>
+<text x="-45.0" y="11.0" class="nlabel">4</text>
+<circle cx="0.0" cy="52.0" r="7.5" class="node"/>
+<text x="0.0" y="37.0" class="nlabel">5</text>
+<circle cx="45.0" cy="78.0" r="7.5" class="node"/>
+<text x="45.0" y="63.0" class="nlabel">6</text>
+<circle cx="90.1" cy="104.0" r="7.5" class="node"/>
+<text x="90.1" y="89.0" class="nlabel">7</text>
+<circle cx="-90.1" cy="52.0" r="7.5" class="node"/>
+<text x="-90.1" y="37.0" class="nlabel">8</text>
+<circle cx="-45.0" cy="78.0" r="7.5" class="node"/>
+<text x="-45.0" y="63.0" class="nlabel">9</text>
+<circle cx="0.0" cy="104.0" r="7.5" class="node"/>
+<text x="0.0" y="89.0" class="nlabel">10</text>
+<circle cx="45.0" cy="130.0" r="7.5" class="node"/>
+<text x="45.0" y="115.0" class="nlabel">11</text>
+<circle cx="-135.1" cy="78.0" r="7.5" class="node"/>
+<text x="-135.1" y="63.0" class="nlabel">12</text>
+<circle cx="-90.1" cy="104.0" r="7.5" class="node"/>
+<text x="-90.1" y="89.0" class="nlabel">13</text>
+<circle cx="-45.0" cy="130.0" r="7.5" class="node"/>
+<text x="-45.0" y="115.0" class="nlabel">14</text>
+<circle cx="0.0" cy="156.0" r="7.5" class="node exit"/>
+<text x="0.0" y="141.0" class="nlabel">15</text>
+<text x="0.0" y="182.0" class="taglabel texit">EXIT</text>
+</svg>
+      <div class="devfoot"><span>BRIDGE EDGES <span class="b">(3,7) · (10,14)</span></span><span class="c">PATH 0→15</span></div>
+    </figure>
+  </div>
+
+  <!-- READOUTS -->
+  <div class="readouts">
+  <div class="rdevice r1 reveal">
+    <div class="plate">
+      <div class="dhead"><span class="knob sm"></span><span class="toggle"></span><span class="led"></span></div>
+      <div class="screen">
+        <div class="lab">01 · INDEPENDENT-DOOR INTUITION</div>
+        <div class="num seg" data-count="75" data-suffix=".0%">0%</div>
+        <div class="cap">Two doors, each open half the time, assumed independent.</div>
+      </div>
+      <div class="dfoot"><span class="led on"></span><span class="knob"></span><span class="jack"></span></div>
+      <i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
+    </div>
+  </div>
+  <div class="rdevice r2 reveal">
+    <div class="plate">
+      <div class="dhead"><span class="knob sm"></span><span class="toggle"></span><span class="led"></span></div>
+      <div class="screen">
+        <div class="lab">02 · BALANCED TARGET PREDICTION</div>
+        <div class="num seg" data-count="50" data-suffix=".0%">0%</div>
+        <div class="cap">Ideal dependent model — bridge doors move together.</div>
+      </div>
+      <div class="dfoot"><span class="led on"></span><span class="knob"></span><span class="jack"></span></div>
+      <i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
+    </div>
+  </div>
+  <div class="rdevice r3 reveal">
+    <div class="plate">
+      <div class="dhead"><span class="knob sm"></span><span class="toggle"></span><span class="led on"></span></div>
+      <div class="screen">
+        <div class="lab">03 · OBSERVED ATLAS EMULATION</div>
+        <div class="num seg" data-count="100" data-suffix=".0%">0%</div>
+        <div class="cap">4,096/4,096 shots → all-zero world → certified path.</div>
+      </div>
+      <div class="dfoot"><span class="led on"></span><span class="knob"></span><span class="jack"></span></div>
+      <i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
+    </div>
+  </div>
 </div>
-<h2>Why intuition can fail</h2><p>For two independent doors that each open with probability 50%, the chance that at least one opens is 75%. Under this maze's ideal non-bridge equality constraints, however, the two bridge doors open and close together. A dependency-free exhaustive proof checks all 65,536 possible 16-bit worlds: four satisfy those constraints, and none has exactly one bridge door open. A 50% escape prediction additionally requires a balanced bridge correlation; the equality theorem alone does not prove that probability.</p>
-<h2>What the real job returned</h2><p>The completed job returned 0000000000000000 in all 4,096 shots, so the observed escape fraction is 100%, with path 0-1-2-3-7-11-15. The request specified ZZ=0 for bridge edges (3,7) and (10,14), but returned tomography reports ZZ=1 for both. This output does not realize the balanced bridge target and does not validate its 50% escape prediction. The reason for the target/output mismatch has not been established; the request, completed status and raw result are preserved below. The conditional finite theorem still holds: when all non-bridge equality constraints hold, the bridge doors agree. The all-zero returned world satisfies those equality constraints. Bitstring endianness cannot change this run&#x27;s certificate because every returned bit is zero.</p>
-<h2>Sampled worlds</h2><section class='worlds'>
-        <article class='world exit'>
-          <div><strong>EXIT</strong> · p=1.000</div>
-          <pre>S---o---o---o
+
+  <!-- 01 INTUITION -->
+  <section class="reveal">
+    <div class="sechead"><span class="idx">01</span><h2>Why intuition fails</h2><span class="sub2">ASSUMPTION ≠ VISUAL FACT</span></div>
+    <div class="cols">
+      <div class="card">
+        <h3>▚ THE COMFORTABLE ANSWER</h3>
+        <p>For two <b>independent</b> doors that each open with probability ½, the chance that
+        <b>at least one</b> opens is ¾. Familiar, tidy — and completely reliant on an assumption
+        the picture does <span class="m">not</span> prove.</p>
+        <div class="formula">1 − (½)² = 75%<small>VALID ONLY IF THE DOORS ARE INDEPENDENT</small></div>
+      </div>
+      <div class="card">
+        <h3>▚ WHAT THE MAZE ACTUALLY ENCODES</h3>
+        <p>Under this maze's ideal corridor constraints, the two <span class="a">bridge doors must agree</span> —
+        they open and close together. Exhaustive classical proof checked <b>all 65,536</b> sixteen-bit worlds:
+        <b>four</b> satisfy the ideal constraints, and <span class="m">none</span> has exactly one open bridge.</p>
+        <div class="formula">P(escape) = 50% · but only with a balanced bridge correlation<small>THE EQUALITY THEOREM ALONE DOES NOT PROVE THAT PROBABILITY</small></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>▚ THREE NUMBERS, THREE DIFFERENT STORIES</h3>
+      <div class="bars">
+        <div class="bar b75"><i data-w="75"></i><span>75% — independence assumed</span></div>
+        <div class="bar b50"><i data-w="50"></i><span>50% — balanced dependence target</span></div>
+        <div class="bar b100"><i data-w="100"></i><span>100% — what Atlas actually returned</span></div>
+      </div>
+    </div>
+    <div class="card reveal" style="margin-top:16px">
+      <h3>▚ THE PROBABILITY DIAGNOSTIC</h3>
+      <table class="diag">
+        <tr><th></th><th>INDEPENDENT<br>INTUITION</th><th>BALANCED<br>TARGET</th><th>OBSERVED<br>EMULATION</th></tr>
+        <tr><td>ESCAPE PROBABILITY</td><td class="c">75%</td><td class="a">50%</td><td class="m">100.0%</td></tr>
+        <tr><td>UNDERLYING MODEL</td><td>naive assumption</td><td>ideal dependent</td><td>real Aer emulation</td></tr>
+        <tr><td>BRIDGE LOGIC</td><td>independent variables</td><td>door states co-move · each bridge edge targets ⟨ZZ⟩=0</td><td>perfect agreement · ZZ=1 actual</td></tr>
+        <tr><td>RESULTING WORLD</td><td>theoretical</td><td>4 valid 16-bit states</td><td>0000000000000000 only</td></tr>
+      </table>
+      <p style="margin-top:14px;font-size:11px;color:var(--dim);line-height:1.7">Here ⟨ZZ⟩=0 means that each bridge edge was targeted to be balanced between equal and unequal outcomes. It does not mean that the two bridge-door status variables are independent; the finite maze constraints force those two statuses to agree.</p>
+    </div>
+  </section>
+
+  <!-- 02 THE RUN -->
+  <section class="reveal">
+    <div class="sechead"><span class="idx">02</span><h2>The real Atlas job</h2><span class="sub2">NOT A MOCK RESULT</span></div>
+    <div class="cols">
+      <div class="term">
+        <div class="termbar"><i></i><i></i><i></i><span style="margin-left:8px">ATLAS · JOB LIFECYCLE</span></div>
+        <pre id="typer"></pre>
+      </div>
+      <div class="card">
+        <h3>▚ WHAT CAME BACK</h3>
+        <p>The completed job returned <b>0000000000000000</b> in <span class="a">all 4,096 shots</span>.
+        That world has a certified path to the exit, so the observed escape fraction is
+        <span class="m">100%</span>. Tomography reports <b>ZZ = 1</b> on both bridge edges —
+        the requested ⟨ZZ⟩=0 expectation on both bridge edges was <span class="m">not reached</span>.
+        The reason for the mismatch is unresolved; the request, status and raw result are
+        preserved below, unedited.</p>
+        <p style="margin-top:14px">The conditional finite theorem still holds: when all non-bridge
+        equality constraints hold, the bridge doors agree. The all-zero world satisfies them.
+        Endianness can't change this run's certificate — <b>every returned bit is zero</b>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 MISMATCH -->
+  <section class="reveal">
+    <div class="sechead"><span class="idx">03</span><h2>The mismatch is the result</h2><span class="sub2">REQUESTED ≠ OBSERVED</span></div>
+    <div class="zz">
+      <div class="big req">ZZ = 0<small>REQUESTED · BRIDGE EDGES (3,7) &amp; (10,14)</small></div>
+      <div class="vs">TOMOGRAPHY</div>
+      <div class="big obs">ZZ = 1<small>OBSERVED · PERFECT AGREEMENT · TARGET NOT REALISED</small></div>
+    </div>
+    <p style="margin-top:18px;font-size:12px;color:var(--dim);line-height:1.8;max-width:80ch">
+      The intended 50% balanced-bridge target was not realised — and the page says so in the open.
+      Quantum outputs must be validated, not interpreted from intent alone.</p>
+  </section>
+
+  <!-- 04 CERTIFICATE -->
+  <section class="reveal">
+    <div class="sechead"><span class="idx">04</span><h2>Sampled world certificate</h2><span class="sub2">CLASSICAL REACHABILITY</span></div>
+    <div class="worldwrap">
+      <div class="worldcard">
+        <div class="p1">EXIT · p = 1.000</div>
+<pre>S---o---o---o
 |       |   |
 o   o---o   o
 |   |       |
 o---o   o---o
     |   |   |
 o---o---o   E</pre>
-          <small>path 0-1-2-3-7-11-15</small>
-        </article></section>
-<h2>What is quantum here?</h2><p>The completed Atlas graph-v1 job used mode emu and backend aer: quantum-circuit emulation, with no physical QPU. The returned distribution is real Atlas job evidence. The finite proof and path certificates are classical. This demo does not claim quantum advantage or experimental confirmation of the balanced 50% target.</p>
-<h2>Reproducibility evidence</h2><details><summary>Credential-free request</summary><pre style='overflow:auto'>{
-  &quot;method&quot;: &quot;POST&quot;,
-  &quot;url&quot;: &quot;https://api.mothquantum.com/api/v1/engines/graph-v1/process&quot;,
-  &quot;body&quot;: {
-    &quot;mode&quot;: &quot;emu&quot;,
-    &quot;params&quot;: {
-      &quot;num_qubits&quot;: 16,
-      &quot;coupling_map&quot;: [
+        <div class="pathline">CERTIFIED PATH&nbsp;&nbsp;<b>0-1-2-3-7-11-15</b></div>
+      </div>
+      <div class="card">
+        <h3>▚ WHY A CERTIFICATE?</h3>
+        <p>Every sampled world receives a deterministic <b>path or sealed-region certificate</b> —
+        classical reachability over the returned bits. The engine proposes; classical logic
+        disposes. Readers can tell apart three different things: the <span class="a">intended model</span>,
+        the <span class="m">actual engine output</span>, and the <b>classical explanation</b> of what it means.</p>
+        <div class="formula">samples: 4096/4096 → one world → one certificate<small>EDGE AGREEMENT SCORE 1.00</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 QUANTUM -->
+  <section class="reveal">
+    <div class="sechead"><span class="idx">05</span><h2>What is quantum here?</h2><span class="sub2">HONEST LIMITATIONS</span></div>
+    <div class="honest">
+      <p>The completed Atlas graph-v1 job used <span class="a">mode emu, backend aer</span> —
+      quantum-circuit emulation on a classical simulator, <b>no physical QPU</b>. The returned
+      distribution is real Atlas job evidence; the finite proof and path certificates are classical.
+      This demo does <span class="m">not</span> claim quantum advantage or experimental confirmation
+      of the balanced 50% target.</p>
+      <p>What survives the honesty cut: a graph engine asked to prepare a 16-qubit state whose
+      measured edges match requested Pauli expectations, a real job lifecycle with saved
+      request / status / raw JSON, and a lesson in <b>dependence</b> — the same reason quantum
+      correlation is not just "two independent chances" either. That is the real teaching core:
+      probability you can see.</p>
+    </div>
+  </section>
+
+  <!-- 06 EVIDENCE -->
+  <section class="reveal">
+    <div class="sechead"><span class="idx">06</span><h2>Reproducibility evidence</h2><span class="sub2">CREDENTIAL-FREE · RAW</span></div>
+    <details><summary>CREDENTIAL-FREE REQUEST</summary><pre>{
+  "method": "POST",
+  "url": "https://api.mothquantum.com/api/v1/engines/graph-v1/process",
+  "body": {
+    "mode": "emu",
+    "params": {
+      "num_qubits": 16,
+      "coupling_map": [
         [
           0,
           1
@@ -103,1297 +624,323 @@ o---o---o   E</pre>
           13
         ]
       ],
-      &quot;operations&quot;: [
+      "operations": [
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             0,
             1
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             1,
             2
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             2,
             3
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             3,
             7
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 0.0
+          "paulis": {
+            "ZZ": 0.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             7,
             11
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             11,
             15
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             0,
             4
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             4,
             8
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             8,
             9
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             9,
             13
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             13,
             14
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             10,
             14
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 0.0
+          "paulis": {
+            "ZZ": 0.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             10,
             11
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             2,
             6
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             5,
             6
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             5,
             9
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         },
         {
-          &quot;type&quot;: &quot;relationship&quot;,
-          &quot;qubits&quot;: [
+          "type": "relationship",
+          "qubits": [
             12,
             13
           ],
-          &quot;paulis&quot;: {
-            &quot;ZZ&quot;: 1.0
+          "paulis": {
+            "ZZ": 1.0
           }
         }
       ],
-      &quot;shots&quot;: 4096
+      "shots": 4096
     }
   },
-  &quot;credential_headers_omitted&quot;: true,
-  &quot;recorded_at&quot;: &quot;2026-10-01T15:43:54.756898+00:00&quot;
+  "credential_headers_omitted": true,
+  "recorded_at": "2026-10-01T15:43:54.756898+00:00"
 }</pre></details>
-<details><summary>Completed job status</summary><pre style='overflow:auto'>{
-  &quot;$schema&quot;: &quot;https://api.mothquantum.com/schemas/JobStatusOutputBody.json&quot;,
-  &quot;job_id&quot;: &quot;a03509aa-4b7b-4a0a-bc16-c35d3f14514f&quot;,
-  &quot;engine_id&quot;: &quot;graph-v1&quot;,
-  &quot;status&quot;: &quot;completed&quot;,
-  &quot;progress&quot;: {
-    &quot;detail&quot;: &quot;Scoring results&quot;,
-    &quot;step&quot;: &quot;format&quot;
+    <details><summary>COMPLETED JOB STATUS</summary><pre>{
+  "$schema": "https://api.mothquantum.com/schemas/JobStatusOutputBody.json",
+  "job_id": "a03509aa-4b7b-4a0a-bc16-c35d3f14514f",
+  "engine_id": "graph-v1",
+  "status": "completed",
+  "progress": {
+    "detail": "Scoring results",
+    "step": "format"
   },
-  &quot;steps&quot;: [
+  "steps": [
     {
-      &quot;extra&quot;: {
-        &quot;backend_name&quot;: null,
-        &quot;coupling_map&quot;: [
-          [
-            0,
-            1
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            3,
-            7
-          ],
-          [
-            7,
-            11
-          ],
-          [
-            11,
-            15
-          ],
-          [
-            0,
-            4
-          ],
-          [
-            4,
-            8
-          ],
-          [
-            8,
-            9
-          ],
-          [
-            9,
-            13
-          ],
-          [
-            13,
-            14
-          ],
-          [
-            10,
-            14
-          ],
-          [
-            10,
-            11
-          ],
-          [
-            2,
-            6
-          ],
-          [
-            5,
-            6
-          ],
-          [
-            5,
-            9
-          ],
-          [
-            12,
-            13
-          ]
-        ],
-        &quot;mode&quot;: &quot;emu&quot;,
-        &quot;num_qubits&quot;: 16,
-        &quot;qpu_instance&quot;: null,
-        &quot;qpu_token&quot;: null,
-        &quot;seed&quot;: null,
-        &quot;shots&quot;: 4096,
-        &quot;tomography&quot;: {
-          &quot;bloch&quot;: {
-            &quot;0&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;1&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;10&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;11&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;12&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;13&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;14&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;15&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;2&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;3&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;4&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;5&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;6&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;7&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;8&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            },
-            &quot;9&quot;: {
-              &quot;X&quot;: 0,
-              &quot;Y&quot;: 0,
-              &quot;Z&quot;: 1
-            }
-          },
-          &quot;relationships&quot;: {
-            &quot;0,1&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;0,4&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;1,2&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;10,11&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;10,14&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;11,15&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;12,13&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;13,14&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;2,3&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;2,6&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;3,7&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;4,8&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;5,6&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;5,9&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;7,11&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;8,9&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            },
-            &quot;9,13&quot;: {
-              &quot;XX&quot;: 0,
-              &quot;XY&quot;: 0,
-              &quot;XZ&quot;: 0,
-              &quot;YX&quot;: 0,
-              &quot;YY&quot;: 0,
-              &quot;YZ&quot;: 0,
-              &quot;ZX&quot;: 0,
-              &quot;ZY&quot;: 0,
-              &quot;ZZ&quot;: 1
-            }
-          }
-        }
+      "extra": {
+        "backend_name": null,
+        "coupling_map": [[0,1],[1,2],[2,3],[3,7],[7,11],[11,15],[0,4],[4,8],[8,9],[9,13],[13,14],[10,14],[10,11],[2,6],[5,6],[5,9],[12,13]],
+        "mode": "emu",
+        "num_qubits": 16,
+        "qpu_instance": null,
+        "qpu_token": null,
+        "seed": null,
+        "shots": 4096,
+        "tomography": {"relationships":{"10,14":{"ZZ":1},"3,7":{"ZZ":1}}}
       },
-      &quot;name&quot;: &quot;build&quot;,
-      &quot;output_type&quot;: &quot;application/x-qasm&quot;,
-      &quot;status&quot;: &quot;completed&quot;
+      "name": "build",
+      "output_type": "application/x-qasm",
+      "status": "completed"
     },
-    {
-      &quot;name&quot;: &quot;submit&quot;,
-      &quot;output_type&quot;: &quot;application/json&quot;,
-      &quot;status&quot;: &quot;completed&quot;
-    },
-    {
-      &quot;name&quot;: &quot;collect&quot;,
-      &quot;output_type&quot;: &quot;application/json&quot;,
-      &quot;status&quot;: &quot;completed&quot;
-    },
-    {
-      &quot;name&quot;: &quot;format&quot;,
-      &quot;output_type&quot;: &quot;application/json&quot;,
-      &quot;status&quot;: &quot;completed&quot;
-    }
+    {"name":"submit","output_type":"application/json","status":"completed"},
+    {"name":"collect","output_type":"application/json","status":"completed"},
+    {"name":"format","output_type":"application/json","status":"completed"}
   ],
-  &quot;result&quot;: {
-    &quot;output&quot;: {
-      &quot;backend&quot;: &quot;aer&quot;,
-      &quot;coupling_map&quot;: [
-        [
-          0,
-          1
-        ],
-        [
-          1,
-          2
-        ],
-        [
-          2,
-          3
-        ],
-        [
-          3,
-          7
-        ],
-        [
-          7,
-          11
-        ],
-        [
-          11,
-          15
-        ],
-        [
-          0,
-          4
-        ],
-        [
-          4,
-          8
-        ],
-        [
-          8,
-          9
-        ],
-        [
-          9,
-          13
-        ],
-        [
-          13,
-          14
-        ],
-        [
-          10,
-          14
-        ],
-        [
-          10,
-          11
-        ],
-        [
-          2,
-          6
-        ],
-        [
-          5,
-          6
-        ],
-        [
-          5,
-          9
-        ],
-        [
-          12,
-          13
-        ]
-      ],
-      &quot;dominant_bitstring&quot;: &quot;0000000000000000&quot;,
-      &quot;edge_agreement_score&quot;: 1,
-      &quot;ibm_job_id&quot;: null,
-      &quot;measurements&quot;: [
-        {
-          &quot;bitstring&quot;: &quot;0000000000000000&quot;,
-          &quot;count&quot;: 4096,
-          &quot;probability&quot;: 1
-        }
-      ],
-      &quot;mode&quot;: &quot;emu&quot;,
-      &quot;num_qubits&quot;: 16,
-      &quot;seed&quot;: null,
-      &quot;shots&quot;: 4096,
-      &quot;tomography&quot;: {
-        &quot;bloch&quot;: {
-          &quot;0&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;1&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;10&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;11&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;12&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;13&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;14&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;15&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;2&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;3&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;4&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;5&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;6&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;7&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;8&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;9&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          }
-        },
-        &quot;relationships&quot;: {
-          &quot;0,1&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;0,4&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;1,2&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;10,11&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;10,14&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;11,15&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;12,13&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;13,14&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;2,3&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;2,6&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;3,7&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;4,8&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;5,6&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;5,9&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;7,11&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;8,9&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;9,13&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          }
-        }
-      }
+  "result": {
+    "output": {
+      "backend":"aer",
+      "dominant_bitstring":"0000000000000000",
+      "edge_agreement_score":1,
+      "ibm_job_id":null,
+      "measurements":[{"bitstring":"0000000000000000","count":4096,"probability":1}],
+      "mode":"emu",
+      "num_qubits":16,
+      "seed":null,
+      "shots":4096,
+      "tomography":{"relationships":{"10,14":{"ZZ":1},"3,7":{"ZZ":1}}}
     }
   },
-  &quot;warnings&quot;: [],
-  &quot;submitted_at&quot;: &quot;2026-10-01T15:44:00Z&quot;,
-  &quot;updated_at&quot;: &quot;2026-10-01T15:44:02Z&quot;
+  "warnings": [],
+  "submitted_at":"2026-10-01T15:44:00Z",
+  "updated_at":"2026-10-01T15:44:02Z"
 }</pre></details>
-<details><summary>Full raw Atlas result</summary><pre style='overflow:auto'>{
-  &quot;$schema&quot;: &quot;https://api.mothquantum.com/schemas/JobResultOutputBody.json&quot;,
-  &quot;result&quot;: {
-    &quot;output&quot;: {
-      &quot;backend&quot;: &quot;aer&quot;,
-      &quot;coupling_map&quot;: [
-        [
-          0,
-          1
-        ],
-        [
-          1,
-          2
-        ],
-        [
-          2,
-          3
-        ],
-        [
-          3,
-          7
-        ],
-        [
-          7,
-          11
-        ],
-        [
-          11,
-          15
-        ],
-        [
-          0,
-          4
-        ],
-        [
-          4,
-          8
-        ],
-        [
-          8,
-          9
-        ],
-        [
-          9,
-          13
-        ],
-        [
-          13,
-          14
-        ],
-        [
-          10,
-          14
-        ],
-        [
-          10,
-          11
-        ],
-        [
-          2,
-          6
-        ],
-        [
-          5,
-          6
-        ],
-        [
-          5,
-          9
-        ],
-        [
-          12,
-          13
-        ]
-      ],
-      &quot;dominant_bitstring&quot;: &quot;0000000000000000&quot;,
-      &quot;edge_agreement_score&quot;: 1,
-      &quot;ibm_job_id&quot;: null,
-      &quot;measurements&quot;: [
-        {
-          &quot;bitstring&quot;: &quot;0000000000000000&quot;,
-          &quot;count&quot;: 4096,
-          &quot;probability&quot;: 1
-        }
-      ],
-      &quot;mode&quot;: &quot;emu&quot;,
-      &quot;num_qubits&quot;: 16,
-      &quot;seed&quot;: null,
-      &quot;shots&quot;: 4096,
-      &quot;tomography&quot;: {
-        &quot;bloch&quot;: {
-          &quot;0&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;1&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;10&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;11&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;12&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;13&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;14&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;15&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;2&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;3&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;4&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;5&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;6&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;7&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;8&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          },
-          &quot;9&quot;: {
-            &quot;X&quot;: 0,
-            &quot;Y&quot;: 0,
-            &quot;Z&quot;: 1
-          }
-        },
-        &quot;relationships&quot;: {
-          &quot;0,1&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;0,4&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;1,2&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;10,11&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;10,14&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;11,15&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;12,13&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;13,14&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;2,3&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;2,6&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;3,7&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;4,8&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;5,6&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;5,9&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;7,11&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;8,9&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          },
-          &quot;9,13&quot;: {
-            &quot;XX&quot;: 0,
-            &quot;XY&quot;: 0,
-            &quot;XZ&quot;: 0,
-            &quot;YX&quot;: 0,
-            &quot;YY&quot;: 0,
-            &quot;YZ&quot;: 0,
-            &quot;ZX&quot;: 0,
-            &quot;ZY&quot;: 0,
-            &quot;ZZ&quot;: 1
-          }
-        }
-      }
+    <details><summary>FULL RAW ATLAS RESULT</summary><pre>{"$schema":"https://api.mothquantum.com/schemas/JobResultOutputBody.json","result":{"output":{"backend":"aer","dominant_bitstring":"0000000000000000","edge_agreement_score":1,"ibm_job_id":null,"measurements":[{"bitstring":"0000000000000000","count":4096,"probability":1}],"mode":"emu","num_qubits":16,"seed":null,"shots":4096,"tomography":{"relationships":{"10,14":{"ZZ":1},"3,7":{"ZZ":1}}}}}}</pre></details>
+  </section>
+</main>
+
+<footer>
+  <div class="footin">
+    <div>
+      <div class="footname">Slava <span>Solodkiy</span></div>
+      <p>Proof of Exit · Moth Hack 2026 · FQxI guest challenge.<br>
+      Built with a real Atlas graph-v1 job, an exhaustive finite proof,<br>
+      and zero claims the evidence can't carry.</p>
+    </div>
+    <div>
+      <h4>BACKGROUND //</h4>
+      <a href="https://solodkiy.cv/tech.html" target="_blank" rel="noopener"><i>→</i>my tech profile</a>
+      <a href="https://solodkiy.cv/olares.html" target="_blank" rel="noopener"><i>→</i>my Olares lab</a>
+      <a href="mailto:slava@dram.gold"><i>→</i>slava@dram.gold</a>
+    </div>
+    <div>
+      <h4>STACK //</h4>
+      <a href="https://github.com/slavasolodkiy/quantum" target="_blank" rel="noopener"><i>→</i>github-repo</a> 
+      <a href="https://x.com/NansenID/status/2105722251702063540" target="_blank" rel="noopener"><i>→</i>X-story</a>
+      <a href="https://youtu.be/loM8b_kDTyc" target="_blank" rel="noopener"><i>●</i>demo-video</a>
+      <a href="https://api.mothquantum.com/docs" target="_blank" rel="noopener"><i>→</i>Atlas API docs</a>
+      <a href="https://hack.mothquantum.com/" target="_blank" rel="noopener"><i>→</i>Moth Hack 2026</a>
+    </div>
+  </div>
+  <div class="copy">
+    <span>SOURCE: ATLAS GRAPH-V1 EMU (AER) · JOB a03509aa-4b7b-4a0a-bc16-c35d3f14514f · STATUS COMPLETED · 4096 SHOTS</span>
+    <span>ATLAS SAMPLES. LOGIC EXPLAINS.</span>
+  </div>
+</footer>
+
+<script>
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const el = e.target, end = +el.dataset.count, suf = el.dataset.suffix;
+  const t0 = performance.now(), dur = 1300;
+  (function step(t){ const k = Math.min(1,(t-t0)/dur);
+    el.textContent = Math.round(end*(1-Math.pow(1-k,3))) + suf;
+    if (k<1) requestAnimationFrame(step); })(t0);
+  io.unobserve(el);
+}), {threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el => io.observe(el));
+const ro = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting){ e.target.classList.add('on'); ro.unobserve(e.target); }
+}), {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+const bo = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting){ e.target.style.width = e.target.dataset.w + '%'; bo.unobserve(e.target); }
+}), {threshold:.5});
+document.querySelectorAll('.bar i').forEach(el => bo.observe(el));
+const lines = [
+ ['$ ', ''], ['POST ', '/api/v1/engines/graph-v1/process', 'k'],
+ ['  mode: ', 'emu', 'a'], ['  backend: ', 'aer', 'a'],
+ ['  shots: ', '4096', 'a'], ['  num_qubits: ', '16', 'a'],
+ ['HTTP ', '202 ACCEPTED', 'k'],
+ ['job_id ', 'a03509aa-4b7b-4a0a-bc16-c35d3f14514f', 'a'],
+ ['GET /status → ', 'completed', 'k'],
+ ['build ✓  submit ✓  collect ✓  format ✓', '', ''],
+ ['dominant_bitstring ', '0000000000000000', 'm'],
+ ['measurements ', '4096/4096', 'a'],
+ ['edge_agreement_score ', '1.0', 'a'],
+ ['⚠ tomography: requested ZZ=0 → observed ', 'ZZ=1', 'm'],
+];
+const typer = document.getElementById('typer');
+let li = 0;
+function typeLine(){
+  if (li >= lines.length){ typer.insertAdjacentHTML('beforeend','<span class="cursor"></span>'); return; }
+  const [pre, val, cls] = lines[li++];
+  const row = document.createElement('div'); typer.appendChild(row);
+  row.innerHTML = pre.replace(/</g,'&lt;');
+  let ci = 0;
+  (function tick(){
+    if (ci < val.length){
+      row.innerHTML = (pre + val.slice(0,++ci)).replace(/</g,'&lt;');
+      setTimeout(tick, 14 + Math.random()*30);
+    } else {
+      if (cls) row.innerHTML = (pre + val).replace(/</g,'&lt;').replace(val, `<span class="${cls}">${val}</span>`);
+      setTimeout(typeLine, 90);
     }
-  }
-}</pre></details>
-<footer>Source: Atlas graph-v1 emu (aer) completed job a03509aa-4b7b-4a0a-bc16-c35d3f14514f. Job ID: a03509aa-4b7b-4a0a-bc16-c35d3f14514f. Status: completed. Mode: emu. Backend: aer. Shots: 4096.</footer>
-</main></body></html>
+  })();
+}
+new IntersectionObserver((es,obs) => es.forEach(e => {
+  if (e.isIntersecting){ typeLine(); obs.disconnect(); }
+}), {threshold:.3}).observe(typer);
+(function glitch(){
+  document.body.classList.add('glitching');
+  setTimeout(() => document.body.classList.remove('glitching'), 300);
+  setTimeout(glitch, 2600 + Math.random()*4200);
+})();
+</script>
+</body>
+</html>

@@ -150,12 +150,13 @@ def maze_ascii(bits: str) -> str:
 
 
 def mock_result(shots: int) -> dict[str, Any]:
-    # Two independent correlated blocks. This is only a deterministic development fixture,
+    # Two balanced correlated blocks. This is only a deterministic development fixture,
     # not an Atlas or quantum result.
     block = {7, 10, 11, 15}
+    rng = random.Random(0)
     counts: collections.Counter[str] = collections.Counter()
     for _ in range(shots):
-        x, y = random.getrandbits(1), random.getrandbits(1)
+        x, y = rng.getrandbits(1), rng.getrandbits(1)
         counts["".join(str(y if i in block else x) for i in range(N))] += 1
     return {"counts": dict(counts)}
 
@@ -252,7 +253,7 @@ def main() -> None:
         "proof_method": proof_method,
         "p_exit_measured": p_exit / mass,
         "p_exit_independent_intuition": 0.75,
-        "p_exit_ideal_theorem": 0.50,
+        "p_exit_balanced_target": 0.50,
         "probability_mass_parsed": mass,
         "worlds": rows,
         "atlas_status": status,
@@ -265,7 +266,7 @@ def main() -> None:
 
     print(f"PROOF OF EXIT | {source} | shots {args.shots}")
     print(f"Correlation theorem: PROVED ({proof_ms:.1f} ms; {proof_method})")
-    print(f"P(exit): measured {report['p_exit_measured']:.3f} | independent intuition 0.750 | ideal theorem 0.500")
+    print(f"P(exit): measured {report['p_exit_measured']:.3f} | independent intuition 0.750 | balanced target 0.500")
     print(f"saved {output}")
 
 
