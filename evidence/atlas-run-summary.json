@@ -1,0 +1,10 @@
+{
+  "job_id": "a03509aa-4b7b-4a0a-bc16-c35d3f14514f",
+  "engine_id": "graph-v1",
+  "mode": "emu",
+  "status": "completed",
+  "shots_requested": 4096,
+  "theorem_proved": true,
+  "proof_ms": 218.6333999998169,
+  "proof_method": "exhaustive finite proof: checked 2^16 worlds; 4 satisfy ideal constraints"
+}

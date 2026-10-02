@@ -1,0 +1,1399 @@
+<!doctype html>
+<html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Proof of Exit</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;background:#0f1115;color:#f6f4ef}main{max-width:1050px;margin:auto;padding:48px 24px}h1{font-size:clamp(3rem,8vw,7rem);margin:.1em 0}.tag{font-size:1.25rem;color:#b8d7ff}.numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:32px 0}.n,.world{background:#181c23;border:1px solid #303640;border-radius:14px;padding:18px}.n b{display:block;font-size:2rem}.worlds{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}pre{font-size:1.05rem;line-height:1.1}.exit{border-color:#4fa46c}.locked{border-color:#bd6666}footer{margin-top:36px;color:#aaa}@media(max-width:650px){.numbers{grid-template-columns:1fr}}
+</style></head><body><main>
+<p class='tag'>Atlas samples. Logic explains.</p><h1>Proof of Exit</h1>
+<p>A 4×4 maze is represented by a 16-bit world. A corridor opens when adjacent rooms agree. Classical reachability checking determines whether an exit exists and emits a certificate for every sampled world.</p>
+<div class='numbers'>
+<div class='n'><span>Independent-door intuition</span><b>75%</b></div>
+<div class='n'><span>Balanced target prediction</span><b>50%</b></div>
+<div class='n'><span>Observed Atlas emulation</span><b>100.0%</b></div>
+</div>
+<h2>Why intuition can fail</h2><p>For two independent doors that each open with probability 50%, the chance that at least one opens is 75%. Under this maze's ideal non-bridge equality constraints, however, the two bridge doors open and close together. A dependency-free exhaustive proof checks all 65,536 possible 16-bit worlds: four satisfy those constraints, and none has exactly one bridge door open. A 50% escape prediction additionally requires a balanced bridge correlation; the equality theorem alone does not prove that probability.</p>
+<h2>What the real job returned</h2><p>The completed job returned 0000000000000000 in all 4,096 shots, so the observed escape fraction is 100%, with path 0-1-2-3-7-11-15. The request specified ZZ=0 for bridge edges (3,7) and (10,14), but returned tomography reports ZZ=1 for both. This output does not realize the balanced bridge target and does not validate its 50% escape prediction. The reason for the target/output mismatch has not been established; the request, completed status and raw result are preserved below. The conditional finite theorem still holds: when all non-bridge equality constraints hold, the bridge doors agree. The all-zero returned world satisfies those equality constraints. Bitstring endianness cannot change this run&#x27;s certificate because every returned bit is zero.</p>
+<h2>Sampled worlds</h2><section class='worlds'>
+        <article class='world exit'>
+          <div><strong>EXIT</strong> · p=1.000</div>
+          <pre>S---o---o---o
+|       |   |
+o   o---o   o
+|   |       |
+o---o   o---o
+    |   |   |
+o---o---o   E</pre>
+          <small>path 0-1-2-3-7-11-15</small>
+        </article></section>
+<h2>What is quantum here?</h2><p>The completed Atlas graph-v1 job used mode emu and backend aer: quantum-circuit emulation, with no physical QPU. The returned distribution is real Atlas job evidence. The finite proof and path certificates are classical. This demo does not claim quantum advantage or experimental confirmation of the balanced 50% target.</p>
+<h2>Reproducibility evidence</h2><details><summary>Credential-free request</summary><pre style='overflow:auto'>{
+  &quot;method&quot;: &quot;POST&quot;,
+  &quot;url&quot;: &quot;https://api.mothquantum.com/api/v1/engines/graph-v1/process&quot;,
+  &quot;body&quot;: {
+    &quot;mode&quot;: &quot;emu&quot;,
+    &quot;params&quot;: {
+      &quot;num_qubits&quot;: 16,
+      &quot;coupling_map&quot;: [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          7,
+          11
+        ],
+        [
+          11,
+          15
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          4,
+          8
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          9,
+          13
+        ],
+        [
+          13,
+          14
+        ],
+        [
+          10,
+          14
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          12,
+          13
+        ]
+      ],
+      &quot;operations&quot;: [
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            0,
+            1
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            1,
+            2
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            2,
+            3
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            3,
+            7
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 0.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            7,
+            11
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            11,
+            15
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            0,
+            4
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            4,
+            8
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            8,
+            9
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            9,
+            13
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            13,
+            14
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            10,
+            14
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 0.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            10,
+            11
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            2,
+            6
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            5,
+            6
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            5,
+            9
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        },
+        {
+          &quot;type&quot;: &quot;relationship&quot;,
+          &quot;qubits&quot;: [
+            12,
+            13
+          ],
+          &quot;paulis&quot;: {
+            &quot;ZZ&quot;: 1.0
+          }
+        }
+      ],
+      &quot;shots&quot;: 4096
+    }
+  },
+  &quot;credential_headers_omitted&quot;: true,
+  &quot;recorded_at&quot;: &quot;2026-10-01T15:43:54.756898+00:00&quot;
+}</pre></details>
+<details><summary>Completed job status</summary><pre style='overflow:auto'>{
+  &quot;$schema&quot;: &quot;https://api.mothquantum.com/schemas/JobStatusOutputBody.json&quot;,
+  &quot;job_id&quot;: &quot;a03509aa-4b7b-4a0a-bc16-c35d3f14514f&quot;,
+  &quot;engine_id&quot;: &quot;graph-v1&quot;,
+  &quot;status&quot;: &quot;completed&quot;,
+  &quot;progress&quot;: {
+    &quot;detail&quot;: &quot;Scoring results&quot;,
+    &quot;step&quot;: &quot;format&quot;
+  },
+  &quot;steps&quot;: [
+    {
+      &quot;extra&quot;: {
+        &quot;backend_name&quot;: null,
+        &quot;coupling_map&quot;: [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            7,
+            11
+          ],
+          [
+            11,
+            15
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            9,
+            13
+          ],
+          [
+            13,
+            14
+          ],
+          [
+            10,
+            14
+          ],
+          [
+            10,
+            11
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            12,
+            13
+          ]
+        ],
+        &quot;mode&quot;: &quot;emu&quot;,
+        &quot;num_qubits&quot;: 16,
+        &quot;qpu_instance&quot;: null,
+        &quot;qpu_token&quot;: null,
+        &quot;seed&quot;: null,
+        &quot;shots&quot;: 4096,
+        &quot;tomography&quot;: {
+          &quot;bloch&quot;: {
+            &quot;0&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;1&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;10&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;11&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;12&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;13&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;14&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;15&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;2&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;3&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;4&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;5&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;6&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;7&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;8&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            },
+            &quot;9&quot;: {
+              &quot;X&quot;: 0,
+              &quot;Y&quot;: 0,
+              &quot;Z&quot;: 1
+            }
+          },
+          &quot;relationships&quot;: {
+            &quot;0,1&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;0,4&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;1,2&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;10,11&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;10,14&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;11,15&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;12,13&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;13,14&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;2,3&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;2,6&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;3,7&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;4,8&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;5,6&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;5,9&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;7,11&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;8,9&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            },
+            &quot;9,13&quot;: {
+              &quot;XX&quot;: 0,
+              &quot;XY&quot;: 0,
+              &quot;XZ&quot;: 0,
+              &quot;YX&quot;: 0,
+              &quot;YY&quot;: 0,
+              &quot;YZ&quot;: 0,
+              &quot;ZX&quot;: 0,
+              &quot;ZY&quot;: 0,
+              &quot;ZZ&quot;: 1
+            }
+          }
+        }
+      },
+      &quot;name&quot;: &quot;build&quot;,
+      &quot;output_type&quot;: &quot;application/x-qasm&quot;,
+      &quot;status&quot;: &quot;completed&quot;
+    },
+    {
+      &quot;name&quot;: &quot;submit&quot;,
+      &quot;output_type&quot;: &quot;application/json&quot;,
+      &quot;status&quot;: &quot;completed&quot;
+    },
+    {
+      &quot;name&quot;: &quot;collect&quot;,
+      &quot;output_type&quot;: &quot;application/json&quot;,
+      &quot;status&quot;: &quot;completed&quot;
+    },
+    {
+      &quot;name&quot;: &quot;format&quot;,
+      &quot;output_type&quot;: &quot;application/json&quot;,
+      &quot;status&quot;: &quot;completed&quot;
+    }
+  ],
+  &quot;result&quot;: {
+    &quot;output&quot;: {
+      &quot;backend&quot;: &quot;aer&quot;,
+      &quot;coupling_map&quot;: [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          7,
+          11
+        ],
+        [
+          11,
+          15
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          4,
+          8
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          9,
+          13
+        ],
+        [
+          13,
+          14
+        ],
+        [
+          10,
+          14
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          12,
+          13
+        ]
+      ],
+      &quot;dominant_bitstring&quot;: &quot;0000000000000000&quot;,
+      &quot;edge_agreement_score&quot;: 1,
+      &quot;ibm_job_id&quot;: null,
+      &quot;measurements&quot;: [
+        {
+          &quot;bitstring&quot;: &quot;0000000000000000&quot;,
+          &quot;count&quot;: 4096,
+          &quot;probability&quot;: 1
+        }
+      ],
+      &quot;mode&quot;: &quot;emu&quot;,
+      &quot;num_qubits&quot;: 16,
+      &quot;seed&quot;: null,
+      &quot;shots&quot;: 4096,
+      &quot;tomography&quot;: {
+        &quot;bloch&quot;: {
+          &quot;0&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;1&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;10&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;11&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;12&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;13&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;14&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;15&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;2&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;3&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;4&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;5&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;6&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;7&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;8&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;9&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          }
+        },
+        &quot;relationships&quot;: {
+          &quot;0,1&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;0,4&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;1,2&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;10,11&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;10,14&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;11,15&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;12,13&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;13,14&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;2,3&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;2,6&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;3,7&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;4,8&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;5,6&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;5,9&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;7,11&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;8,9&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;9,13&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          }
+        }
+      }
+    }
+  },
+  &quot;warnings&quot;: [],
+  &quot;submitted_at&quot;: &quot;2026-10-01T15:44:00Z&quot;,
+  &quot;updated_at&quot;: &quot;2026-10-01T15:44:02Z&quot;
+}</pre></details>
+<details><summary>Full raw Atlas result</summary><pre style='overflow:auto'>{
+  &quot;$schema&quot;: &quot;https://api.mothquantum.com/schemas/JobResultOutputBody.json&quot;,
+  &quot;result&quot;: {
+    &quot;output&quot;: {
+      &quot;backend&quot;: &quot;aer&quot;,
+      &quot;coupling_map&quot;: [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          7,
+          11
+        ],
+        [
+          11,
+          15
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          4,
+          8
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          9,
+          13
+        ],
+        [
+          13,
+          14
+        ],
+        [
+          10,
+          14
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          12,
+          13
+        ]
+      ],
+      &quot;dominant_bitstring&quot;: &quot;0000000000000000&quot;,
+      &quot;edge_agreement_score&quot;: 1,
+      &quot;ibm_job_id&quot;: null,
+      &quot;measurements&quot;: [
+        {
+          &quot;bitstring&quot;: &quot;0000000000000000&quot;,
+          &quot;count&quot;: 4096,
+          &quot;probability&quot;: 1
+        }
+      ],
+      &quot;mode&quot;: &quot;emu&quot;,
+      &quot;num_qubits&quot;: 16,
+      &quot;seed&quot;: null,
+      &quot;shots&quot;: 4096,
+      &quot;tomography&quot;: {
+        &quot;bloch&quot;: {
+          &quot;0&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;1&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;10&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;11&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;12&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;13&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;14&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;15&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;2&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;3&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;4&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;5&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;6&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;7&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;8&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          },
+          &quot;9&quot;: {
+            &quot;X&quot;: 0,
+            &quot;Y&quot;: 0,
+            &quot;Z&quot;: 1
+          }
+        },
+        &quot;relationships&quot;: {
+          &quot;0,1&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;0,4&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;1,2&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;10,11&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;10,14&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;11,15&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;12,13&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;13,14&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;2,3&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;2,6&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;3,7&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;4,8&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;5,6&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;5,9&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;7,11&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;8,9&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          },
+          &quot;9,13&quot;: {
+            &quot;XX&quot;: 0,
+            &quot;XY&quot;: 0,
+            &quot;XZ&quot;: 0,
+            &quot;YX&quot;: 0,
+            &quot;YY&quot;: 0,
+            &quot;YZ&quot;: 0,
+            &quot;ZX&quot;: 0,
+            &quot;ZY&quot;: 0,
+            &quot;ZZ&quot;: 1
+          }
+        }
+      }
+    }
+  }
+}</pre></details>
+<footer>Source: Atlas graph-v1 emu (aer) completed job a03509aa-4b7b-4a0a-bc16-c35d3f14514f. Job ID: a03509aa-4b7b-4a0a-bc16-c35d3f14514f. Status: completed. Mode: emu. Backend: aer. Shots: 4096.</footer>
+</main></body></html>

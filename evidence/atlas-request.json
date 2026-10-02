@@ -1,0 +1,255 @@
+{
+  "method": "POST",
+  "url": "https://api.mothquantum.com/api/v1/engines/graph-v1/process",
+  "body": {
+    "mode": "emu",
+    "params": {
+      "num_qubits": 16,
+      "coupling_map": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          7,
+          11
+        ],
+        [
+          11,
+          15
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          4,
+          8
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          9,
+          13
+        ],
+        [
+          13,
+          14
+        ],
+        [
+          10,
+          14
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          12,
+          13
+        ]
+      ],
+      "operations": [
+        {
+          "type": "relationship",
+          "qubits": [
+            0,
+            1
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            1,
+            2
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            2,
+            3
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            3,
+            7
+          ],
+          "paulis": {
+            "ZZ": 0.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            7,
+            11
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            11,
+            15
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            0,
+            4
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            4,
+            8
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            8,
+            9
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            9,
+            13
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            13,
+            14
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            10,
+            14
+          ],
+          "paulis": {
+            "ZZ": 0.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            10,
+            11
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            2,
+            6
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            5,
+            6
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            5,
+            9
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        },
+        {
+          "type": "relationship",
+          "qubits": [
+            12,
+            13
+          ],
+          "paulis": {
+            "ZZ": 1.0
+          }
+        }
+      ],
+      "shots": 4096
+    }
+  },
+  "credential_headers_omitted": true,
+  "recorded_at": "2026-10-01T15:43:54.756898+00:00"
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://api.mothquantum.com/schemas/SubmitJobOutputBody.json",
+  "job_id": "a03509aa-4b7b-4a0a-bc16-c35d3f14514f",
+  "status": "queued",
+  "submitted_at": "2026-10-01T15:44:00Z"
+}

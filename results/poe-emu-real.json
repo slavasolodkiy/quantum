@@ -1,0 +1,1436 @@
+{
+  "title": "Proof of Exit",
+  "source": "Atlas graph-v1 emu (aer) completed job a03509aa-4b7b-4a0a-bc16-c35d3f14514f",
+  "job_id": "a03509aa-4b7b-4a0a-bc16-c35d3f14514f",
+  "mode": "emu",
+  "backend": "aer",
+  "shots": 4096,
+  "theorem_proved": true,
+  "proof_ms": 144.02149999978064,
+  "proof_method": "exhaustive finite proof: checked 2^16 worlds; 4 satisfy ideal constraints",
+  "p_exit_measured": 1.0,
+  "p_exit_independent_intuition": 0.75,
+  "p_exit_ideal_theorem": 0.5,
+  "ideal_prediction_condition": "Non-bridge equality constraints and balanced bridge equality, equivalently bridge ZZ=0, must hold.",
+  "probability_mass_parsed": 1.0,
+  "worlds": [
+    {
+      "bits": "0000000000000000",
+      "probability": 1.0,
+      "count": 4096,
+      "exit": true,
+      "certificate": "path 0-1-2-3-7-11-15",
+      "maze": "S---o---o---o\n|       |   |\no   o---o   o\n|   |       |\no---o   o---o\n    |   |   |\no---o---o   E"
+    }
+  ],
+  "atlas_status": "completed",
+  "request": {
+    "method": "POST",
+    "url": "https://api.mothquantum.com/api/v1/engines/graph-v1/process",
+    "body": {
+      "mode": "emu",
+      "params": {
+        "num_qubits": 16,
+        "coupling_map": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            7,
+            11
+          ],
+          [
+            11,
+            15
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            9,
+            13
+          ],
+          [
+            13,
+            14
+          ],
+          [
+            10,
+            14
+          ],
+          [
+            10,
+            11
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            12,
+            13
+          ]
+        ],
+        "operations": [
+          {
+            "type": "relationship",
+            "qubits": [
+              0,
+              1
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              1,
+              2
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              2,
+              3
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              3,
+              7
+            ],
+            "paulis": {
+              "ZZ": 0.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              7,
+              11
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              11,
+              15
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              0,
+              4
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              4,
+              8
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              8,
+              9
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              9,
+              13
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              13,
+              14
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              10,
+              14
+            ],
+            "paulis": {
+              "ZZ": 0.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              10,
+              11
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              2,
+              6
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              5,
+              6
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              5,
+              9
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          },
+          {
+            "type": "relationship",
+            "qubits": [
+              12,
+              13
+            ],
+            "paulis": {
+              "ZZ": 1.0
+            }
+          }
+        ],
+        "shots": 4096
+      }
+    },
+    "credential_headers_omitted": true,
+    "recorded_at": "2026-10-01T15:43:54.756898+00:00"
+  },
+  "status_raw": {
+    "$schema": "https://api.mothquantum.com/schemas/JobStatusOutputBody.json",
+    "job_id": "a03509aa-4b7b-4a0a-bc16-c35d3f14514f",
+    "engine_id": "graph-v1",
+    "status": "completed",
+    "progress": {
+      "detail": "Scoring results",
+      "step": "format"
+    },
+    "steps": [
+      {
+        "extra": {
+          "backend_name": null,
+          "coupling_map": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              7,
+              11
+            ],
+            [
+              11,
+              15
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              4,
+              8
+            ],
+            [
+              8,
+              9
+            ],
+            [
+              9,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              10,
+              14
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              12,
+              13
+            ]
+          ],
+          "mode": "emu",
+          "num_qubits": 16,
+          "qpu_instance": null,
+          "qpu_token": null,
+          "seed": null,
+          "shots": 4096,
+          "tomography": {
+            "bloch": {
+              "0": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "1": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "10": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "11": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "12": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "13": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "14": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "15": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "2": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "3": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "4": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "5": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "6": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "7": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "8": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              },
+              "9": {
+                "X": 0,
+                "Y": 0,
+                "Z": 1
+              }
+            },
+            "relationships": {
+              "0,1": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "0,4": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "1,2": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "10,11": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "10,14": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "11,15": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "12,13": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "13,14": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "2,3": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "2,6": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "3,7": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "4,8": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "5,6": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "5,9": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "7,11": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "8,9": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              },
+              "9,13": {
+                "XX": 0,
+                "XY": 0,
+                "XZ": 0,
+                "YX": 0,
+                "YY": 0,
+                "YZ": 0,
+                "ZX": 0,
+                "ZY": 0,
+                "ZZ": 1
+              }
+            }
+          }
+        },
+        "name": "build",
+        "output_type": "application/x-qasm",
+        "status": "completed"
+      },
+      {
+        "name": "submit",
+        "output_type": "application/json",
+        "status": "completed"
+      },
+      {
+        "name": "collect",
+        "output_type": "application/json",
+        "status": "completed"
+      },
+      {
+        "name": "format",
+        "output_type": "application/json",
+        "status": "completed"
+      }
+    ],
+    "result": {
+      "output": {
+        "backend": "aer",
+        "coupling_map": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            7,
+            11
+          ],
+          [
+            11,
+            15
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            9,
+            13
+          ],
+          [
+            13,
+            14
+          ],
+          [
+            10,
+            14
+          ],
+          [
+            10,
+            11
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            12,
+            13
+          ]
+        ],
+        "dominant_bitstring": "0000000000000000",
+        "edge_agreement_score": 1,
+        "ibm_job_id": null,
+        "measurements": [
+          {
+            "bitstring": "0000000000000000",
+            "count": 4096,
+            "probability": 1
+          }
+        ],
+        "mode": "emu",
+        "num_qubits": 16,
+        "seed": null,
+        "shots": 4096,
+        "tomography": {
+          "bloch": {
+            "0": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "1": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "10": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "11": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "12": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "13": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "14": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "15": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "2": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "3": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "4": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "5": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "6": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "7": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "8": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "9": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            }
+          },
+          "relationships": {
+            "0,1": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "0,4": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "1,2": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "10,11": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "10,14": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "11,15": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "12,13": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "13,14": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "2,3": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "2,6": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "3,7": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "4,8": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "5,6": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "5,9": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "7,11": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "8,9": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "9,13": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            }
+          }
+        }
+      }
+    },
+    "warnings": [],
+    "submitted_at": "2026-10-01T15:44:00Z",
+    "updated_at": "2026-10-01T15:44:02Z"
+  },
+  "raw": {
+    "$schema": "https://api.mothquantum.com/schemas/JobResultOutputBody.json",
+    "result": {
+      "output": {
+        "backend": "aer",
+        "coupling_map": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            7,
+            11
+          ],
+          [
+            11,
+            15
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            9,
+            13
+          ],
+          [
+            13,
+            14
+          ],
+          [
+            10,
+            14
+          ],
+          [
+            10,
+            11
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            12,
+            13
+          ]
+        ],
+        "dominant_bitstring": "0000000000000000",
+        "edge_agreement_score": 1,
+        "ibm_job_id": null,
+        "measurements": [
+          {
+            "bitstring": "0000000000000000",
+            "count": 4096,
+            "probability": 1
+          }
+        ],
+        "mode": "emu",
+        "num_qubits": 16,
+        "seed": null,
+        "shots": 4096,
+        "tomography": {
+          "bloch": {
+            "0": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "1": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "10": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "11": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "12": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "13": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "14": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "15": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "2": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "3": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "4": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "5": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "6": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "7": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "8": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            },
+            "9": {
+              "X": 0,
+              "Y": 0,
+              "Z": 1
+            }
+          },
+          "relationships": {
+            "0,1": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "0,4": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "1,2": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "10,11": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "10,14": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "11,15": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "12,13": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "13,14": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "2,3": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "2,6": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "3,7": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "4,8": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "5,6": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "5,9": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "7,11": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "8,9": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            },
+            "9,13": {
+              "XX": 0,
+              "XY": 0,
+              "XZ": 0,
+              "YX": 0,
+              "YY": 0,
+              "YZ": 0,
+              "ZX": 0,
+              "ZY": 0,
+              "ZZ": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "limitations": [
+    "The completed job returned 0000000000000000 in all 4,096 shots, so the observed escape fraction is 100%, with path 0-1-2-3-7-11-15.",
+    "The request specified ZZ=0 for bridge edges (3,7) and (10,14), but returned tomography reports ZZ=1 for both. This output does not realize the balanced bridge target and does not validate its 50% escape prediction.",
+    "The reason for the target/output mismatch has not been established; the request, completed status and raw result are preserved below.",
+    "The conditional finite theorem still holds: when all non-bridge equality constraints hold, the bridge doors agree. The all-zero returned world satisfies those equality constraints.",
+    "Bitstring endianness cannot change this run's certificate because every returned bit is zero."
+  ],
+  "bridge_target_checks": [
+    {
+      "edge": [
+        3,
+        7
+      ],
+      "requested_ZZ": 0,
+      "returned_ZZ": 1
+    },
+    {
+      "edge": [
+        10,
+        14
+      ],
+      "requested_ZZ": 0,
+      "returned_ZZ": 1
+    }
+  ],
+  "physical_qpu_used": false,
+  "evidence_files": {
+    "request": "evidence/atlas-request.json",
+    "status": "evidence/atlas-status.json",
+    "raw": "evidence/atlas-raw-result.json"
+  },
+  "verification": {
+    "job_identity_matches": true,
+    "completed": true,
+    "counts_match_shots": true,
+    "probabilities_match_counts": true,
+    "path_certificate_verified": true,
+    "ideal_non_bridge_equalities_satisfied": true,
+    "balanced_bridge_target_realized": false
+  }
+}
