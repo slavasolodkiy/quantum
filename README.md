@@ -87,7 +87,7 @@ certificate runs before and after any Atlas call.
 | Completed job status | `evidence/atlas-status.json` | `completed` |
 | Full raw Atlas result | `evidence/atlas-raw-result.json` | unedited |
 | Exhaustive proof | `poe.py → theorem_proved()` | **proved** (`2^16` worlds) |
-| Demo | [captioned](https://www.solodkiy.cv/proof-of-exit.html) | [X](https://x.com/NansenID/status/2105722251702063540) [play]((https://quantum-curious-kids.lovable.app) |
+| Demo | [captioned](https://www.solodkiy.cv/proof-of-exit.html) | [X](https://x.com/NansenID/status/2105722251702063540) [play](https://quantum-curious-kids.lovable.app) |
 
 Job ID `a03509aa-4b7b-4a0a-bc16-c35d3f14514f` · submitted `2026-10-01T15:44:00Z` ·
 completed `2026-10-01T15:44:02Z` · path certificate `0-1-2-3-7-11-15`.
